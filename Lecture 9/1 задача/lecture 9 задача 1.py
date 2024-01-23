@@ -1,4 +1,5 @@
 import os
+import glob
 import platform
 
 
@@ -45,18 +46,33 @@ def cur_dir():
 
 print(f"{op_sys()}\n{cur_dir()}")
 
-if not os.path.exists(f"*.{extensions}"):
-    os.mkdir(f"{extensions}")
 
-sum_1 = 0
-size = 0
-for filename in os.listdir():
-    if f"*.{extensions}" in filename:
-        size += os.path.getsize(filename)
-        os.replace(filename, f"{extensions}/{filename}")
-        sum_1 += 1
+def sort_files():
+    path = os.getcwd()
+    kol = 1
+    for extension, folder_name in extensions.items():
+        sum_1 = 0
+        size = 0
+        files = glob.glob(os.path.join(path, f"*.{extension}"))
+        if len(files) != 0:
+            print(f"[*] Найдено {len(files)} файлов с {extension} расширением")
+            if not os.path.isdir(os.path.join(path, folder_name)) and files:
+                print(f"[+] Создание папки {folder_name}")
+                os.mkdir(os.path.join(path, folder_name))
+                for file in files:
+                    basename = os.path.basename(file)
+                    dst = os.path.join(path, folder_name, basename)
+                    if kol:
+                        print(f"[*] перемещение  {file} в {dst}")
+                    sum_1 += 1
+                    size += os.path.getsize(file)
+                    os.replace(file, dst)
+                path_1 = os.path.join(path, folder_name)
+                os.rename(f"{path_1}/{basename}", f"{path_1}/first.{extension}")
+            print(f"{sum_1} файл/-ов перемещено в папку {path_1} общим размером - {size} кб")
+            print(f"Файл {basename} был переименован в first.{extension}")
+        else:
+            continue
 
-print(f"{sum_1} файл/-ов перемещено в папку {extensions} общим размером - {size} кб")
 
-# os.rename(f"data_txt/{filename_txt}", "data_txt/renamed.txt")
-# print(f"Файл {filename_txt} был переименован в renamed.txt")
+sort_files()
