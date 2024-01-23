@@ -1,5 +1,6 @@
-with open("qwe.txt") as string_1:
-    string_1 = string_1.read()
+if __name__ == "__main__":
+    with open("qwe.txt") as string_1:
+        string_1 = string_1.read()
 
 
 def finder(string):
